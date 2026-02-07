@@ -1,26 +1,53 @@
-// 1. Initialize Data from Storage
-let transactions = JSON.parse(localStorage.getItem('my_data')) || [];
+// --- 1. DATA & STATE ---
+let transactions = JSON.parse(localStorage.getItem('saas_data')) || [];
+let currency = localStorage.getItem('saas_curr') || '$';
+let myChart = null;
 
-// 2. DOM Elements
+// --- 2. ELEMENT SELECTORS ---
+const dashView = document.getElementById('dash-view');
+const transView = document.getElementById('trans-view');
+const pageTitle = document.getElementById('page-title');
 const modal = document.getElementById('modal');
-const addBtn = document.getElementById('add-btn');
-const saveBtn = document.getElementById('save-btn');
-const cancelBtn = document.getElementById('cancel-btn');
-const tableBody = document.getElementById('table-body');
 
-// 3. Open/Close Modal
-addBtn.onclick = () => modal.style.display = 'flex';
-cancelBtn.onclick = () => modal.style.display = 'none';
+// --- 3. NAVIGATION & THEME ---
+document.getElementById('nav-dash').onclick = () => {
+    dashView.style.display = 'block'; transView.style.display = 'none';
+    pageTitle.innerText = "Overview";
+    document.getElementById('nav-dash').classList.add('active');
+    document.getElementById('nav-trans').classList.remove('active');
+};
 
-// 4. Save Transaction
-saveBtn.onclick = () => {
+document.getElementById('nav-trans').onclick = () => {
+    dashView.style.display = 'none'; transView.style.display = 'block';
+    pageTitle.innerText = "Transactions";
+    document.getElementById('nav-trans').classList.add('active');
+    document.getElementById('nav-dash').classList.remove('active');
+};
+
+document.getElementById('theme-toggle').onclick = () => {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    localStorage.setItem('saas_theme', isDark ? 'light' : 'dark');
+};
+
+// --- 4. CURRENCY & MODAL ---
+document.getElementById('currency-select').onchange = (e) => {
+    currency = e.target.value;
+    localStorage.setItem('saas_curr', currency);
+    updateUI();
+};
+
+document.getElementById('add-btn').onclick = () => modal.style.display = 'flex';
+document.getElementById('cancel-btn').onclick = () => modal.style.display = 'none';
+
+document.getElementById('save-btn').onclick = () => {
     const desc = document.getElementById('desc').value;
     const amount = parseFloat(document.getElementById('amount').value);
     const type = document.getElementById('type').value;
 
     if (desc && amount) {
         transactions.push({ desc, amount, type });
-        localStorage.setItem('my_data', JSON.stringify(transactions));
+        localStorage.setItem('saas_data', JSON.stringify(transactions));
         updateUI();
         modal.style.display = 'none';
         document.getElementById('desc').value = '';
@@ -28,94 +55,50 @@ saveBtn.onclick = () => {
     }
 };
 
-// 5. Update UI & Chart
-function updateUI() {
-    tableBody.innerHTML = '';
-    let income = 0;
-    let expense = 0;
-
-    // We add 'index' here to track which row is which
-    transactions.forEach((t, index) => {
-        tableBody.innerHTML += `
-            <tr>
-                <td>${t.desc}</td>
-                <td>${t.type}</td>
-                <td>$${t.amount}</td>
-                <td>
-                    <button class="delete-btn" onclick="deleteTransaction(${index})">Delete</button>
-                </td>
-            </tr>`;
-        
-        if (t.type === 'income') income += t.amount;
-        else expense += t.amount;
-    });
-
-    document.getElementById('total-income').innerText = `$${income}`;
-    document.getElementById('total-expenses').innerText = `$${expense}`;
-    document.getElementById('net-balance').innerText = `$${income - expense}`;
-    
-    renderChart(income, expense);
-}
-
-// The New Delete Function
-function deleteTransaction(index) {
-    // Remove 1 item at the specific index
-    transactions.splice(index, 1); 
-    
-    // Save the new shortened list to LocalStorage
-    localStorage.setItem('my_data', JSON.stringify(transactions));
-    
-    // Refresh the screen
+// --- 5. CORE LOGIC ---
+function deleteItem(index) {
+    transactions.splice(index, 1);
+    localStorage.setItem('saas_data', JSON.stringify(transactions));
     updateUI();
 }
 
-// 6. Chart.js Function
-let myChart;
-function renderChart(inc, exp) {
+function updateUI() {
+    const tbody = document.getElementById('table-body');
+    tbody.innerHTML = '';
+    let inc = 0, exp = 0;
+
+    transactions.forEach((t, i) => {
+        tbody.innerHTML += `<tr>
+            <td>${t.desc}</td>
+            <td style="color:${t.type==='income'?'#27ae60':'#e74c3c'}">${t.type.toUpperCase()}</td>
+            <td>${currency}${t.amount}</td>
+            <td><button onclick="deleteItem(${i})" style="color:red; cursor:pointer; border:none; background:none;">Delete</button></td>
+        </tr>`;
+        if (t.type === 'income') inc += t.amount; else exp += t.amount;
+    });
+
+    document.getElementById('total-income').innerText = `${currency}${inc}`;
+    document.getElementById('total-expenses').innerText = `${currency}${exp}`;
+    document.getElementById('net-balance').innerText = `${currency}${inc - exp}`;
+    
+    initChart(inc, exp);
+}
+
+function initChart(inc, exp) {
     const ctx = document.getElementById('myChart').getContext('2d');
-    if (myChart) myChart.destroy(); // Fix for chart overlap
+    if (myChart) myChart.destroy();
     myChart = new Chart(ctx, {
-        type: 'pie',
+        type: 'doughnut',
         data: {
             labels: ['Income', 'Expenses'],
-            datasets: [{
-                data: [inc, exp],
-                backgroundColor: ['#27ae60', '#e74c3c']
-            }]
+            datasets: [{ data: [inc, exp], backgroundColor: ['#2ecc71', '#e74c3c'] }]
         },
-        options: { responsive: true, maintainAspectRatio: false }
+        options: { maintainAspectRatio: false }
     });
 }
 
-// Initial Load
+// --- 6. INITIAL LOAD ---
+const savedTheme = localStorage.getItem('saas_theme');
+if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+document.getElementById('currency-select').value = currency;
 updateUI();
-
-// Sidebar Navigation Logic
-const navDash = document.getElementById('nav-dash');
-const navTrans = document.getElementById('nav-trans');
-const dashView = document.getElementById('overview-view');
-const transView = document.getElementById('transactions-view');
-const pageTitle = document.getElementById('page-title');
-
-navDash.onclick = () => {
-    // Show Dashboard, Hide Transactions
-    dashView.style.display = 'block';
-    transView.style.display = 'none';
-    pageTitle.innerText = "Overview";
-    
-    // Update active class for CSS
-    navDash.classList.add('active');
-    navTrans.classList.remove('active');
-};
-
-navTrans.onclick = () => {
-    // Show Transactions, Hide Dashboard
-    dashView.style.display = 'none';
-    transView.style.display = 'block';
-    pageTitle.innerText = "Transactions";
-    
-    // Update active class for CSS
-    navTrans.classList.add('active');
-    navDash.classList.remove('active');
-};
-
