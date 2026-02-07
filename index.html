@@ -60,6 +60,15 @@
                     <button id="export-btn" class="secondary-btn">📥 Export to Excel</button>
                 </div>
                 <div class="table-section">
+                    <div class="filter-bar" style="margin-bottom: 20px; display: flex; gap: 10px;">
+    <input type="text" id="search-input" placeholder="Search items..." style="flex: 2; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text);">
+    
+    <select id="filter-type" style="flex: 1; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text);">
+        <option value="all">All Types</option>
+        <option value="income">Income Only</option>
+        <option value="expense">Expenses Only</option>
+    </select>
+</div>
                     <table>
                         <thead>
                             <tr>
