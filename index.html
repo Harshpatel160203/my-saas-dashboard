@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SaaS Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="dashboard-container">
+      <nav class="sidebar">
+    <h2>FinTrack</h2>
+    <ul>
+        <li id="nav-dash" class="active">Dashboard</li>
+        <li id="nav-trans">Transactions</li>
+    </ul>
+</nav>
+
+       <main class="main-content">
+    <header>
+        <h1 id="page-title">Overview</h1>
+        <button id="add-btn">+ Add Transaction</button>
+    </header>
+
+    <div id="overview-view">
+        <section class="stats-grid">
+            <div class="card income"><h3>Total Income</h3><p id="total-income">$0</p></div>
+            <div class="card expenses"><h3>Expenses</h3><p id="total-expenses">$0</p></div>
+            <div class="card balance"><h3>Net Balance</h3><p id="net-balance">$0</p></div>
+        </section>
+        <div class="chart-container">
+            <canvas id="myChart"></canvas>
+        </div>
+    </div>
+
+    <div id="transactions-view" style="display: none;">
+        <section class="table-section">
+            <h3>Full History</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body"></tbody>
+            </table>
+        </section>
+    </div>
+</main>
+    </div>
+
+    <div id="modal" class="modal-overlay">
+        <div class="modal-content">
+            <h3>New Transaction</h3>
+            <input type="text" id="desc" placeholder="Description">
+            <input type="number" id="amount" placeholder="Amount">
+            <select id="type">
+                <option value="income">Income</option>
+                <option value="expense">Expense</option>
+            </select>
+            <div class="modal-btns">
+                <button id="save-btn">Save</button>
+                <button id="cancel-btn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
