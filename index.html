@@ -3,67 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SaaS Dashboard</title>
+    <title>Global SaaS Dashboard</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="dashboard-container">
-      <nav class="sidebar">
-    <h2>FinTrack</h2>
-    <ul>
-        <li id="nav-dash" class="active">Dashboard</li>
-        <li id="nav-trans">Transactions</li>
-    </ul>
-</nav>
+        <nav class="sidebar">
+            <h2>FinTrack</h2>
+            <ul>
+                <li id="nav-dash" class="active">📊 Dashboard</li>
+                <li id="nav-trans">💸 Transactions</li>
+                <li id="theme-toggle">🌙 Dark Mode</li>
+                <hr style="margin: 15px 0; opacity: 0.1;">
+                <li style="padding: 10px 15px;">
+                    <label style="font-size: 11px; color: #bdc3c7;">CURRENCY</label>
+                    <select id="currency-select">
+                        <option value="$">USD ($)</option>
+                        <option value="₹">INR (₹)</option>
+                        <option value="€">EUR (€)</option>
+                    </select>
+                </li>
+            </ul>
+        </nav>
 
-       <main class="main-content">
-    <header>
-        <h1 id="page-title">Overview</h1>
-        <button id="add-btn">+ Add Transaction</button>
-    </header>
+        <main class="main-content">
+            <header>
+                <h1 id="page-title">Overview</h1>
+                <button id="add-btn">+ Add New</button>
+            </header>
 
-    <div id="overview-view">
-        <section class="stats-grid">
-            <div class="card income"><h3>Total Income</h3><p id="total-income">$0</p></div>
-            <div class="card expenses"><h3>Expenses</h3><p id="total-expenses">$0</p></div>
-            <div class="card balance"><h3>Net Balance</h3><p id="net-balance">$0</p></div>
-        </section>
-        <div class="chart-container">
-            <canvas id="myChart"></canvas>
-        </div>
-    </div>
+            <div id="dash-view">
+                <section class="stats-grid">
+                    <div class="card"><h3>Income</h3><p id="total-income">0</p></div>
+                    <div class="card"><h3>Expenses</h3><p id="total-expenses">0</p></div>
+                    <div class="card"><h3>Balance</h3><p id="net-balance">0</p></div>
+                </section>
+                <div class="chart-container">
+                    <canvas id="myChart"></canvas>
+                </div>
+            </div>
 
-    <div id="transactions-view" style="display: none;">
-        <section class="table-section">
-            <h3>Full History</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Description</th>
-                        <th>Type</th>
-                        <th>Amount</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id="table-body"></tbody>
-            </table>
-        </section>
-    </div>
-</main>
+            <div id="trans-view" style="display:none;">
+                <div class="table-section">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Type</th>
+                                <th>Amount</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
     </div>
 
     <div id="modal" class="modal-overlay">
         <div class="modal-content">
-            <h3>New Transaction</h3>
-            <input type="text" id="desc" placeholder="Description">
-            <input type="number" id="amount" placeholder="Amount">
+            <h3>Add Transaction</h3>
+            <input type="text" id="desc" placeholder="What was it for?">
+            <input type="number" id="amount" placeholder="How much?">
             <select id="type">
                 <option value="income">Income</option>
                 <option value="expense">Expense</option>
             </select>
             <div class="modal-btns">
-                <button id="save-btn">Save</button>
-                <button id="cancel-btn">Cancel</button>
+               <button id="save-btn">Save</button>
+              <button id="cancel-btn">Cancel</button>
             </div>
         </div>
     </div>
