@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SaaS Finance Dashboard</title>
+    <title>SaaS Finance Pro</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -29,57 +29,48 @@
         <main class="main-content">
             <header>
                 <h1 id="page-title">Overview</h1>
-                <div class="header-btns">
-                    <button id="add-btn">+ Add New</button>
-                </div>
+                <button id="add-btn">+ Add New</button>
             </header>
 
             <div id="dash-view">
                 <section class="stats-grid">
-                    <div class="card">
-                        <h3>Total Income</h3>
-                        <p id="total-income">0</p>
-                    </div>
-                    <div class="card">
-                        <h3>Expenses</h3>
-                        <p id="total-expenses">0</p>
-                    </div>
-                    <div class="card">
-                        <h3>Net Balance</h3>
-                        <p id="net-balance">0</p>
-                    </div>
+                    <div class="card"><h3>Income</h3><p id="total-income">0</p></div>
+                    <div class="card"><h3>Expenses</h3><p id="total-expenses">0</p></div>
+                    <div class="card"><h3>Balance</h3><p id="net-balance">0</p></div>
                 </section>
+
+                <div class="budget-section">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <h4>Monthly Budget Goal</h4>
+                        <span id="budget-status">$0 / $2000</span>
+                    </div>
+                    <div class="progress-track">
+                        <div id="budget-progress"></div>
+                    </div>
+                    <p id="budget-warning" style="display: none; color: #e74c3c; font-size: 12px; margin-top: 10px;">⚠️ Budget Exceeded!</p>
+                </div>
+
                 <div class="chart-container">
                     <canvas id="myChart"></canvas>
                 </div>
             </div>
 
             <div id="trans-view" style="display:none;">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-                    <h3>Full History</h3>
-                    <button id="export-btn" class="secondary-btn">📥 Export to Excel</button>
+                <div class="filter-bar">
+                    <input type="text" id="search-input" placeholder="Search items...">
+                    <select id="filter-type">
+                        <option value="all">All</option>
+                        <option value="income">Income</option>
+                        <option value="expense">Expense</option>
+                    </select>
+                    <button id="export-btn">📥 Export</button>
                 </div>
                 <div class="table-section">
-                    <div class="filter-bar" style="margin-bottom: 20px; display: flex; gap: 10px;">
-    <input type="text" id="search-input" placeholder="Search items..." style="flex: 2; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text);">
-    
-    <select id="filter-type" style="flex: 1; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text);">
-        <option value="all">All Types</option>
-        <option value="income">Income Only</option>
-        <option value="expense">Expenses Only</option>
-    </select>
-</div>
                     <table>
                         <thead>
-                            <tr>
-                                <th>Item</th>
-                                <th>Type</th>
-                                <th>Amount</th>
-                                <th>Action</th>
-                            </tr>
+                            <tr><th>Item</th><th>Type</th><th>Amount</th><th>Action</th></tr>
                         </thead>
-                        <tbody id="table-body">
-                            </tbody>
+                        <tbody id="table-body"></tbody>
                     </table>
                 </div>
             </div>
@@ -88,8 +79,8 @@
 
     <div id="modal" class="modal-overlay">
         <div class="modal-content">
-            <h3>New Transaction</h3>
-            <input type="text" id="desc" placeholder="What was this for?">
+            <h3>New Entry</h3>
+            <input type="text" id="desc" placeholder="Description">
             <input type="number" id="amount" placeholder="Amount">
             <select id="type">
                 <option value="income">Income</option>
