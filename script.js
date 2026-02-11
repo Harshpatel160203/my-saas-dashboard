@@ -60,6 +60,30 @@ async function fetchData() {
     }
 }
 
+async function updateProfileUI() {
+    const { data: { user } } = await supabase_client.auth.getUser();
+    if (user) {
+        document.getElementById('profile-email-display').innerText = user.email;
+        document.getElementById('profile-joined-date').innerText = new Date(user.created_at).toLocaleDateString();
+        
+        // If the user has a display name saved in metadata, show it
+        if (user.user_metadata && user.user_metadata.full_name) {
+            document.getElementById('display-name-input').value = user.user_metadata.full_name;
+        }
+    }
+}
+
+// Logic to save the name to Supabase Auth Metadata
+document.getElementById('save-profile-btn').onclick = async () => {
+    const fullName = document.getElementById('display-name-input').value;
+    const { error } = await supabase_client.auth.updateUser({
+        data: { full_name: fullName }
+    });
+
+    if (error) alert("Error updating profile: " + error.message);
+    else alert("Profile updated successfully!");
+};
+
 // --- GLOBAL DELETE ---
 window.deleteTransaction = async (id) => {
     if (!id) return;
@@ -192,18 +216,29 @@ document.getElementById('save-btn').onclick = async () => {
 };
 
 function switchView(view) {
-    document.getElementById('dash-view').style.display = view === 'dash' ? 'block' : 'none';
-    document.getElementById('trans-view').style.display = view === 'trans' ? 'block' : 'none';
-    document.getElementById('nav-dash').classList.toggle('active', view === 'dash');
-    document.getElementById('nav-trans').classList.toggle('active', view === 'trans');
+
+document.getElementById('dash-view').style.display = view === 'dash' ? 'block' : 'none';
+
+document.getElementById('trans-view').style.display = view === 'trans' ? 'block' : 'none';
+
+document.getElementById('profile-view').style.display = view === 'profile' ? 'block' : 'none';
+
+document.getElementById('nav-dash').classList.toggle('active', view === 'dash');
+
+document.getElementById('nav-trans').classList.toggle('active', view === 'trans');
+
+document.getElementById('nav-profile').classList.toggle('active', view === 'profile');
+
 }
 
 // --- INITIALIZATION ---
 document.getElementById('search-input').oninput = updateUI;
 document.getElementById('filter-type').onchange = updateUI;
-
 document.getElementById('nav-dash').onclick = () => switchView('dash');
 document.getElementById('nav-trans').onclick = () => switchView('trans');
+document.getElementById('nav-profile').onclick = () => switchView('profile');
+
+
 
 document.getElementById('theme-toggle').onclick = () => {
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
