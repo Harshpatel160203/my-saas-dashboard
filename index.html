@@ -25,6 +25,7 @@
         <nav class="sidebar">
             <h2>FinTrack</h2>
             <ul>
+                <li id="nav-profile">👤 Profile</li>
                 <li id="nav-dash" class="active">📊 Dashboard</li>
                 <li id="nav-trans">💸 Transactions</li>
                 <li id="theme-toggle">🌙 Dark Mode</li>
@@ -90,6 +91,23 @@
                     </table>
                 </div>
             </div>
+            <div id="profile-view" style="display:none;">
+    <div class="card" style="max-width: 500px; margin: 20px auto; text-align: center;">
+        <div id="profile-pic-container" style="margin-bottom: 20px;">
+            <div style="width: 100px; height: 100px; background: #ddd; border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center; font-size: 40px;">👤</div>
+        </div>
+        <h3 id="profile-email-display">user@example.com</h3>
+        <p style="color: #7f8c8d; font-size: 14px;">Member since: <span id="profile-joined-date">...</span></p>
+        
+        <hr style="margin: 20px 0; opacity: 0.1;">
+        
+        <div style="text-align: left;">
+            <label style="font-size: 12px; font-weight: bold;">DISPLAY NAME</label>
+            <input type="text" id="display-name-input" placeholder="Enter your name" style="width: 100%; padding: 10px; margin: 8px 0 20px 0;">
+            <button id="save-profile-btn" style="width: 100%; background: var(--accent); color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer;">Update Profile</button>
+        </div>
+    </div>
+</div>
         </main>
     </div>
 
