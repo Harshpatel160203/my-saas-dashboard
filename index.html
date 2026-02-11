@@ -5,8 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SaaS Finance Pro</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
+    <div id="auth-view" style="display: flex; justify-content: center; align-items: center; height: 100vh; background: #f4f7f6;">
+    <div class="card" style="width: 350px; text-align: center; padding: 2rem;">
+        <h2>FinTrack Pro</h2>
+        <p>Login or Sign Up to start tracking</p>
+        <input type="email" id="email" placeholder="Email" style="width: 100%; margin-top: 15px; padding: 10px;">
+        <input type="password" id="password" placeholder="Password" style="width: 100%; margin-top: 10px; padding: 10px;">
+        <div style="margin-top: 20px; display: flex; gap: 10px;">
+            <button id="login-btn" style="flex: 1; background: #2ecc71; color: white; border: none; padding: 10px;">Login</button>
+            <button id="signup-btn" style="flex: 1; background: #3498db; color: white; border: none; padding: 10px;">Sign Up</button>
+        </div>
+        <p id="auth-msg" style="color: #e74c3c; font-size: 12px; margin-top: 10px;"></p>
+    </div>
+</div>
     <div class="dashboard-container">
         <nav class="sidebar">
             <h2>FinTrack</h2>
@@ -23,6 +37,7 @@
                         <option value="€">EUR (€)</option>
                     </select>
                 </li>
+                <li id="logout-btn" style="color: #e74c3c; cursor: pointer;">🚪 Logout</li>
             </ul>
         </nav>
 
@@ -34,9 +49,9 @@
 
             <div id="dash-view">
                 <section class="stats-grid">
-                    <div class="card"><h3>Income</h3><p id="total-income">0</p></div>
-                    <div class="card"><h3>Expenses</h3><p id="total-expenses">0</p></div>
-                    <div class="card"><h3>Balance</h3><p id="net-balance">0</p></div>
+                    <div class="card"><h3>Income</h3><p id="total-inc">0</p></div>
+                    <div class="card"><h3>Expenses</h3><p id="total-exp">0</p></div>
+                    <div class="card"><h3>Balance</h3><p id="balance">0</p></div>
                 </section>
 
                 <div class="budget-section">
@@ -50,7 +65,7 @@
                     <p id="budget-warning" style="display: none; color: #e74c3c; font-size: 12px; margin-top: 10px;">⚠️ Budget Exceeded!</p>
                 </div>
 
-                <div class="chart-container">
+                <div class="chart-container" style="height: 300px;">
                     <canvas id="myChart"></canvas>
                 </div>
             </div>
@@ -71,13 +86,14 @@
                             <tr><th>Item</th><th>Type</th><th>Amount</th><th>Action</th></tr>
                         </thead>
                         <tbody id="table-body"></tbody>
+
                     </table>
                 </div>
             </div>
         </main>
     </div>
 
-    <div id="modal" class="modal-overlay">
+    <div id="modal" class="modal-overlay" style="display: none;">
         <div class="modal-content">
             <h3>New Entry</h3>
             <input type="text" id="desc" placeholder="Description">
